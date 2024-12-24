@@ -1,9 +1,16 @@
 import jwt from "jsonwebtoken";
 
-export const createJWT = (res, userId) => {
-    const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
-        // expiresIn: "1d",
-    });
+export const createJWT = (res, user) => {
+    if (!user) throw new Error("User is not defined");
+    
+    const token = jwt.sign(
+    {
+        id: user._id,
+        email: user.email
+    },
+    process.env.JWT_SECRET, 
+    { expiresIn: "1d" }
+    );
 
     res.cookie("token", token, {
         httpOnly: true,

@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 // Middleware to authenticate users
-const authMiddleware = async (req, res, next) => {
+const protectRoute = async (req, res, next) => {
     try {
         // Extract token from Authorization header or cookies
         const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
@@ -69,4 +69,4 @@ const isUserRoute = (req, res, next) => {
     }
 };
 
-export { authMiddleware, isAdminRoute, isUserRoute };
+export { protectRoute , isAdminRoute, isUserRoute };
