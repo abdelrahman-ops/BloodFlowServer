@@ -38,7 +38,7 @@ const registerUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Error registering user:", error);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ success: false, message: "User Register Server error" });
   }
 };
 
@@ -78,7 +78,7 @@ const registerAdmin = async (req, res) => {
     });
   } catch (error) {
     console.error("Error registering admin:", error);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ success: false, message: "Admin Register Server error" });
   }
 };
 
@@ -116,7 +116,7 @@ const loginUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Error logging in:", error);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ success: false, message: "Login Server error" });
   }
 };
 
@@ -129,7 +129,7 @@ const logoutUser = (req, res) => {
     res.status(200).json({ success: true, message: "Logout successful" });
   } catch (error) {
     console.error("Error logging out:", error);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ success: false, message: "Logout Server error" });
   }
 };
 
