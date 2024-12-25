@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
+
 const adminSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
@@ -16,6 +17,7 @@ const adminSchema = new mongoose.Schema(
       enum: ["admin"],
       default: "admin",
     },
+    isAdmin: {type:Boolean , default : true},
     notifications: [
       {
         type: mongoose.Schema.Types.ObjectId,
