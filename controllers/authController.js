@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import Admin from "../models/Admin.js";
 import { createJWT, clearJWT } from "../config/jwt.js";
-
+import jwt from "jsonwebtoken";
 // Register a new user (Donor)
 const registerUser = async (req, res) => {
   const { name, email, password, bloodType, donor } = req.body;
@@ -84,9 +84,10 @@ const registerAdmin = async (req, res) => {
 
 // Login a user or admin
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  
 
   try {
+    const { email, password } = req.body;
     // Find the user or admin by email
     const user = await User.findOne({ email }) || (await Admin.findOne({ email }));
 
@@ -102,7 +103,7 @@ const loginUser = async (req, res) => {
     }
 
     // Generate a JWT and set the cookie
-    createJWT(res, user);
+    const token = createJWT(res, user._id);
 
     res.status(200).json({
       success: true,
@@ -113,7 +114,10 @@ const loginUser = async (req, res) => {
         email: user.email,
         isAdmin: user.isAdmin || false,
       },
+      token,
     });
+    console.log("Decoded Token",jwt.verify(token, process.env.JWT_SECRET));
+    
   } catch (error) {
     console.error("Error logging in:", error);
     res.status(500).json({ success: false, message: "Login Server error" });
@@ -133,4 +137,81 @@ const logoutUser = (req, res) => {
   }
 };
 
-export { registerUser, registerAdmin, loginUser, logoutUser };
+const getUserData = async (req, res) => {
+  try {
+    // Retrieve the user ID from the authenticated request
+    const userId = req.user?.userId; // Ensure correct field is used from req.user
+    console.log("User ID from request:", userId);
+
+    // If the user ID is missing
+    if (!userId) {
+      return res.status(400).json({ error: "User ID not found in the request" });
+    }
+
+    // Fetch user from the database
+    const user = await User.findById(userId);
+
+    // If the user does not exist in the database
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Prepare the user data to send
+    const sendUser = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      phone: user.phone,
+      address: user.address,
+      role: user.role,
+      bloodType: user.bloodType,
+      donorLevel: user.donorLevel,
+      points: user.points,
+      lastDonationDate: user.lastDonationDate,
+      donationHistory: user.donationHistory,
+      notifications: user.notifications,
+    };
+
+    // Respond with the user data
+    res.status(200).json(sendUser);
+  } catch (error) {
+    console.error("Error fetching user data:", error.message);
+
+    // Return a generic server error
+    res.status(500).json({ error: "An error occurred while fetching user data" });
+  }
+};
+
+
+
+const getAdminData = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const admin = await Admin.findById(id).populate("hospital", "name location");
+
+    if (!admin) {
+      return res.status(404).json({ error: "Admin Not Found" });
+    }
+
+    // Prepare the response object with selected fields
+    const sendAdmin = {
+      id: admin._id,
+      name: admin.name,
+      email: admin.email,
+      hospital: admin.hospital, // Includes only name and location due to the populate
+      role: admin.role,
+      isAdmin: admin.isAdmin,
+      notifications: admin.notifications, // Optionally include this if needed
+    };
+
+    res.status(200).json(sendAdmin);
+  } catch (error) {
+    console.error("Error fetching admin data:", error);
+    res.status(500).json({ error: "Server Error" });
+  }
+};
+
+
+export { registerUser, registerAdmin, loginUser, logoutUser , getUserData , getAdminData};

@@ -24,7 +24,16 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors()); // Enable CORS
+app.use(
+  cors({
+      origin: [
+          "http://localhost:5173",
+          "https://blood-flow.vercel.app"
+      ],
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      credentials: true,
+  })
+);
 app.use(express.json()); // Parse JSON request body
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
 app.use(morgan("dev")); // Logging
