@@ -29,7 +29,8 @@ const getUserNotifications = async (req, res) => {
         res.status(200).json(notifications);
     }catch(error){
         res.status(404).json({ message: error.message });
-}
+}}
+
 const markUserNotificationRead = async (req, res) => {
     try{
         const notification = await UserNotification.findByIdAndUpdate(req.params.id, { read: true });
