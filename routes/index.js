@@ -14,4 +14,3 @@ router.use("/notifications", notificationRoutes);
 router.use("/hospitals", hospitalRoutes);
 
 export default router;
-

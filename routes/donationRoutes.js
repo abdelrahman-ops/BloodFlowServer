@@ -11,18 +11,18 @@ import { protectRoute, isAdminRoute, isUserRoute } from "../middleware/authMiddl
 const router = express.Router();
 
 // Create a new donation (User only)
-router.post("/", protectRoute, isUserRoute, createDonation);
+router.post("/", createDonation);
 
 // Get all donations (Admin only)
-router.get("/", protectRoute, isAdminRoute, getDonations);
+router.get("/",getDonations);
 
 // Get a specific donation by ID (Admin/User)
-router.get("/:id", protectRoute, getDonationById);
+router.get("/", getDonationById);
 
 // Update a donation (Admin only)
-router.put("/:id", protectRoute, isAdminRoute, updateDonation);
+router.put("/", updateDonation);
 
 // Delete a donation (Admin only)
-router.delete("/:id", protectRoute, isAdminRoute, deleteDonation);
+router.delete("/:id", deleteDonation);
 
 export default router;
