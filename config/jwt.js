@@ -5,7 +5,7 @@ export const createJWT = (res, user) => {
     
     const token = jwt.sign(
     {
-        id: user._id,
+        userId: user._id,
         email: user.email
     },
     process.env.JWT_SECRET, 
@@ -15,7 +15,7 @@ export const createJWT = (res, user) => {
     res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "None",
+        sameSite: "none",
         maxAge: 1 * 24 * 60 * 60 * 1000, 
     });
 
