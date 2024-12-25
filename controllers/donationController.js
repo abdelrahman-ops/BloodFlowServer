@@ -40,8 +40,8 @@ const updateDonation = async (req, res) => {
         const donation = await Donation.findById(req.params.id);
         if(donation){
             donation.donor = req.body.donor || donation.donor;
-            donation.bloodGroup = req.body.bloodGroup || donation.bloodGroup;
-            donation.unitsDonated = req.body.unitsDonated || donation.unitsDonated;
+            donation.bloodType = req.body.bloodType || donation.bloodType;
+            donation.amount = req.body.amount || donation.amount;
             donation.donationDate = req.body.donationDate || donation.donationDate;
             donation.save();
             res.json(donation);
