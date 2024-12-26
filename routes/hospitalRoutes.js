@@ -14,7 +14,7 @@ const router = express.Router();
 router.post("/", protectRoute, isAdminRoute, createHospital);
 
 // Get all hospitals
-router.get("/", protectRoute, isAdminRoute, getHospitals);
+router.get("/", getHospitals);
 
 // Get a specific hospital by ID
 router.get("/:id", protectRoute, isAdminRoute, getHospitalById);

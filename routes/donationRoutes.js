@@ -11,7 +11,7 @@ import { protectRoute, isAdminRoute, isUserRoute } from "../middleware/authMiddl
 const router = express.Router();
 
 // Create a new donation (User only)
-router.post("/", protectRoute, isUserRoute, createDonation);
+router.post("/create", createDonation);
 
 // Get all donations (Admin only)
 router.get("/", protectRoute, isAdminRoute, getDonations);
