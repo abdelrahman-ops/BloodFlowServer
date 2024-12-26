@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import BloodInventory from "./Inventory.js";
 const hospitalSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },

@@ -4,7 +4,7 @@ const userNotificationSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Reference to User model
+      ref: "Donor", // Reference to User model
       required: true,
     },
     title: {

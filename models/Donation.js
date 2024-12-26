@@ -19,11 +19,21 @@ const donationSchema = new mongoose.Schema(
     },
     amount: {
       type: Number,
-      required: true, // Amount in milliliters
+      required: true, // Enforcing that amount is always provided
+      min: [1, "Amount must be at least 1 unit."],
     },
     donationDate: {
       type: Date,
       default: Date.now,
+    },
+    status: {
+      type: String,
+      enum: ["Pending", "Completed", "Canceled"],
+      default: "Completed",
+    },
+    comments: {
+      type: String,
+      trim: true,
     },
   },
   { timestamps: true }
