@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
+import Donor from "../models/Donor.js";
 
 // Middleware to authenticate users
 const protectRoute = async (req, res, next) => {
@@ -20,7 +20,7 @@ const protectRoute = async (req, res, next) => {
         console.log("Decoded token:", decodedToken);
 
         // Fetch user details from the database
-        const user = await User.findById(decodedToken.userId).select("isAdmin email");
+        const user = await Donor.findById(decodedToken.userId).select("isAdmin email");
         if (!user) {
             return res.status(404).json({
                 status: false,
