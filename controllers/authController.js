@@ -1,45 +1,119 @@
 import User from "../models/User.js";
 import Admin from "../models/Admin.js";
+import Donor from "../models/Donor.js";
 import { createJWT, clearJWT } from "../config/jwt.js";
 import jwt from "jsonwebtoken";
+
+
 // Register a new user (Donor)
-const registerUser = async (req, res) => {
-  const { name, email, password, bloodType, donor } = req.body;
+const registerDonor = async (req, res) => {
+  const { 
+    name, 
+    age,
+    gender,
+    address ,
+    email, 
+    phone,
+    password, 
+    role, 
+    isAdmin ,
+    bloodType, 
+  } = req.body;
 
   try {
-    // Check if the user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ success: false, message: "User already exists" });
+    // Validate required fields based on donor type
+    if (!name || !bloodType || !age || !gender) {
+      return res.status(400).json({ success: false, message: "Missing required fields" });
     }
 
-    // Create a new user (password hashing is handled in the model)
-    const newUser = new User({
-      name,
-      email,
-      password, // The model pre-save middleware will hash this
-      bloodType,
-      donor: donor || false,
+    if (type === "register" && !email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required for register donors.",
+      });
+    }
+
+    // Generate a JWT and set the cookie (only for register users)
+    if (type === "register") {
+      const existingUser = await Donor.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ success: false, message: "User already exists" });
+      }
+    }
+
+    // Create the new user
+    const newUser = new Donor({
+      name, 
+      age,
+      gender,
+      address ,
+      email, 
+      phone,
+      password, 
+      role, 
+      isAdmin ,
+      bloodType, 
     });
 
     await newUser.save();
 
-    // Generate a JWT and set the cookie
-    createJWT(res, newUser);
+    if (type === "register") {
+      createJWT(res, newUser);
+    }
 
+    // Send response
     res.status(201).json({
       success: true,
-      message: "User registered successfully",
+      message: "Donor created successfully" ,
       user: {
         id: newUser._id,
         name: newUser.name,
         email: newUser.email,
+        isAdmin: newUser.isAdmin,
       },
     });
   } catch (error) {
-    console.error("Error registering user:", error);
-    res.status(500).json({ success: false, message: "User Register Server error" });
+    console.error("Error register user:", error);
+    res.status(500).json({ success: false, message: "Server error while register user" });
   }
+};
+
+const registerQuickDonor = async (req, res) => {
+    const { name, bloodType, age, gender , availability , phone , address , lastDonationDate} = req.body;
+
+    try {
+        // Validate required fields
+        if (!name || !bloodType || !age || !gender) {
+            return res.status(400).json({ success: false, message: "Missing required fields" });
+        }
+
+        // Create the new quick donor
+        const newDonor = new User({ 
+            name,
+            bloodType,
+            age,
+            gender ,
+            availability ,
+            phone ,
+            address ,
+            lastDonationDate
+        });
+
+        await newDonor.save();
+
+        // Send response
+        res.status(201).json({
+            success: true,
+            message: "Quick donor added successfully",
+            user: {
+            id: newDonor._id,
+            name: newDonor.name,
+        },
+        });
+    } catch (error) {
+        console.error("Error registering quick donor:", error);
+        res.status(500).json({ success: false, message: "Server error while registering quick donor" });
+    }
 };
 
 // Register a new admin
@@ -69,7 +143,7 @@ const registerAdmin = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Admin registered successfully",
+      message: "Admin register successfully",
       admin: {
         id: newAdmin._id,
         name: newAdmin.name,
@@ -77,7 +151,7 @@ const registerAdmin = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error registering admin:", error);
+    console.error("Error register admin:", error);
     res.status(500).json({ success: false, message: "Admin Register Server error" });
   }
 };
@@ -89,7 +163,7 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     // Find the user or admin by email
-    const user = await User.findOne({ email }) || (await Admin.findOne({ email }));
+    const user = await Donor.findOne({ email }) || (await Admin.findOne({ email }));
 
     if (!user) {
       return res.status(404).json({ success: false, message: "User/Admin not found" });
@@ -149,7 +223,7 @@ const getUserData = async (req, res) => {
     }
 
     // Fetch user from the database
-    const user = await User.findById(userId);
+    const user = await Donor.findById(userId);
 
     // If the user does not exist in the database
     if (!user) {
@@ -214,4 +288,4 @@ const getAdminData = async (req, res) => {
 };
 
 
-export { registerUser, registerAdmin, loginUser, logoutUser , getUserData , getAdminData};
+export { registerDonor, registerAdmin, loginUser, logoutUser , getUserData , getAdminData , registerQuickDonor};
