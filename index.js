@@ -28,12 +28,15 @@ app.use(
   cors({
       origin: [
           "http://localhost:5173",
-          "https://blood-flow.vercel.app"
+          "https://blood-flow.vercel.app",
+          "https://blood-flow-server-v2.vercel.app"
       ],
       methods: ["GET", "POST", "PUT", "DELETE"],
+      allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,
   })
 );
+app.options("*", cors());
 app.use(express.json()); // Parse JSON request body
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
 app.use(morgan("dev")); // Logging
