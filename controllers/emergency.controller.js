@@ -1,83 +1,83 @@
 import EmergencyRequest from '../models/EmergencyRequest.js';
 import Donor from '../models/Donor.js';
 import Notification from '../models/Notification.js';
-import { sendNotificationToDonors } from '../services/notification.service.js';
+// import { sendNotificationToDonors } from '../services/notification.service.js';
 
 
 // Create emergency request
 export const createEmergencyRequest = async (req, res) => {
-    try {
-        const { name, phone, location, hospital, bloodType, unitsNeeded, notes, coordinates } = req.body;
+    // try {
+    //     const { name, phone, location, hospital, bloodType, unitsNeeded, notes, coordinates } = req.body;
 
-    // Validate required fields
-    if (!name || !phone || !bloodType || !location) {
-        return res.status(400).json({ 
-            success: false,
-            message: 'Name, phone, blood type and location are required' 
-        });
-    }
+    // // Validate required fields
+    // if (!name || !phone || !bloodType || !location) {
+    //     return res.status(400).json({ 
+    //         success: false,
+    //         message: 'Name, phone, blood type and location are required' 
+    //     });
+    // }
 
-    // Create emergency request
-    const emergencyRequest = new EmergencyRequest({
-        name,
-        phone,
-        location,
-        hospital,
-        bloodType,
-        unitsNeeded,
-        notes,
-        coordinates,
-        status: 'pending'
-    });
+    // // Create emergency request
+    // const emergencyRequest = new EmergencyRequest({
+    //     name,
+    //     phone,
+    //     location,
+    //     hospital,
+    //     bloodType,
+    //     unitsNeeded,
+    //     notes,
+    //     coordinates,
+    //     status: 'pending'
+    // });
 
-        await emergencyRequest.save();
+    //     await emergencyRequest.save();
 
-    // Find matching donors (within same region and available)
-    const donors = await Donor.find({
-        availability: true
-        }).populate({
-        path: 'userId',
-        match: { bloodType }
-    });
+    // // Find matching donors (within same region and available)
+    // const donors = await Donor.find({
+    //     availability: true
+    //     }).populate({
+    //     path: 'userId',
+    //     match: { bloodType }
+    // });
 
 
-    const matchingDonors = donors.filter(donor => donor.userId);
+    // const matchingDonors = donors.filter(donor => donor.userId);
 
-    const notificationPromises = matchingDonors.map(donor => {
-            return Notification.create({
-                recipient: donor.userId._id,
-                title: 'URGENT: Blood Needed',
-                message: `Emergency need for ${bloodType} blood in ${location}`,
-                emergencyRequest: emergencyRequest._id,
-                type: 'emergency'
-            });
-        });
+    // const notificationPromises = matchingDonors.map(donor => {
+    //         return Notification.create({
+    //             recipient: donor.userId._id,
+    //             title: 'URGENT: Blood Needed',
+    //             message: `Emergency need for ${bloodType} blood in ${location}`,
+    //             emergencyRequest: emergencyRequest._id,
+    //             type: 'emergency'
+    //         });
+    //     });
 
-    await sendNotificationToDonors(matchingDonors, {
-        title: 'URGENT: Blood Needed',
-        body: `Emergency need for ${bloodType} blood in ${location}`,
-        data: {
-            emergencyId: emergencyRequest._id.toString(),
-            type: 'emergency',
-            bloodType,
-            location,
-            hospital,
-            unitsNeeded
-        }
-    });
+    // await sendNotificationToDonors(matchingDonors, {
+    //     title: 'URGENT: Blood Needed',
+    //     body: `Emergency need for ${bloodType} blood in ${location}`,
+    //     data: {
+    //         emergencyId: emergencyRequest._id.toString(),
+    //         type: 'emergency',
+    //         bloodType,
+    //         location,
+    //         hospital,
+    //         unitsNeeded
+    //     }
+    // });
 
-    res.status(201).json({
-        success: true,
-        emergencyRequest,
-        notifiedDonors: matchingDonors.length
-    });
-    } catch (err) {
-        console.error('Emergency request error:', err);
-        res.status(500).json({ 
-        success: false,
-        message: 'Failed to process emergency request'
-        });
-    }
+    // res.status(201).json({
+    //     success: true,
+    //     emergencyRequest,
+    //     notifiedDonors: matchingDonors.length
+    // });
+    // } catch (err) {
+    //     console.error('Emergency request error:', err);
+    //     res.status(500).json({ 
+    //     success: false,
+    //     message: 'Failed to process emergency request'
+    //     });
+    // }
 };
 
 // Track emergency request updates (SSE)
