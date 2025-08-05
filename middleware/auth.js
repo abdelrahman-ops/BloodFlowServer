@@ -2,14 +2,17 @@ import jwt from 'jsonwebtoken';
 
 // Protect routes
 export const protect = async (req, res, next) => {
-    let token;
+    const token = req.headers.authorization?.split(" ")[1] || req.cookies?.token;
 
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        token = req.headers.authorization.split(' ')[1];
-    }
+    // if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    //     token = req.headers.authorization.split(' ')[1];
+    // }
 
     if (!token) {
-        return res.status(401).json({ message: 'Not authorized, no token' });
+        return res.status(401).json({
+            status: false,
+            message: "Unauthorized access. Token is missing. Please log in.",
+        });
     }
 
     try {
