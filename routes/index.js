@@ -7,7 +7,7 @@ import patientRoutes from './patientRoutes.js';
 
 import admin from './admin.routes.js';
 import auth from './auth.routes.js';
-// import requests from './request.routes.js';
+import requests from './request.routes.js';
 import emergency from './emergency.routes.js'
 // import donors from './donor.routes.js';
 import notification from './notification.routes.js'
@@ -23,7 +23,7 @@ router.use("/patient", patientRoutes);
 
 
 router.use('/auth/v2', auth);
-// router.use('/requests/v2', requests);
+router.use('/requests/v2', requests);
 router.use('/emergency/v2', emergency);
 // router.use('/donors/v2', donors);
 router.use('/admin/v2', admin);
