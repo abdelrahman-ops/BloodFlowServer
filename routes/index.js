@@ -5,7 +5,7 @@ import notificationRoutes from "./notificationRoutes.js";
 import hospitalRoutes from "./hospitalRoutes.js";
 import patientRoutes from './patientRoutes.js';
 
-// import admin from './admin.routes.js';
+import admin from './admin.routes.js';
 // import auth from './auth.routes.js';
 // import requests from './request.routes.js';
 // import emergency from './emergency.routes.js'
@@ -26,7 +26,7 @@ router.use("/patient", patientRoutes);
 // router.use('/requests/v2', requests);
 // router.use('/emergency/v2', emergency);
 // router.use('/donors/v2', donors);
-// router.use('/admin/v2', admin);
+router.use('/admin/v2', admin);
 // router.use('/notification/v2', notification);
 
 export default router;
