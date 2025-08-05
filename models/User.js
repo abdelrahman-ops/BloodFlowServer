@@ -1,23 +1,27 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
+const userSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    phone: { type: String, required: true },
+    bloodType: { 
+        type: String, 
+        required: true,
+        enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+    },
+    city: { type: String, required: true },
+    district: { type: String, required: true },
+    gender: { type: String, enum: ['male', 'female', 'other'] },
+    role: { type: String, enum: ['admin', 'donor', 'user'], required: true },
+    notifications: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Notification",
+        },
+    ],
+    fcmToken: { type: String },
+    createdAt: { type: Date, default: Date.now }  
+});
 
-
-const userSchema = new mongoose.Schema(
-    {
-        name: { type: String, required: true, trim: true },
-        age: {type : Number , required: true },
-        gender: {type: String , required: true},
-        address: { type: String },
-        phone: { type: String },
-        availability: { type: Date },
-        bloodType: { type: String, enum: ["O+", "A+", "B+", "AB+", "O-", "A-", "B-", "AB-"], required: false },
-        lastDonationDate: { type: Date, default: null },
-        createdAt: { type: Date, default: Date.now },
-},
-    { timestamps: true }
-);
-
-
-
-const User = mongoose.models.User || mongoose.model('User', userSchema);
-export default User;
+export default mongoose.model('User', userSchema);

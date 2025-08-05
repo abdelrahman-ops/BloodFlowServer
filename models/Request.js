@@ -1,15 +1,23 @@
-import mongoose from "mongoose";
-
+import mongoose from 'mongoose';
 
 const requestSchema = new mongoose.Schema({
-    patientId: { type: mongoose.Schema.Types.ObjectId, ref: "Patient", required: true },
-    bloodType: { type: String, required: true },
+    requesterId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    bloodType: { 
+        type: String, 
+        required: true,
+        enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+    },
+    unitsNeeded: { type: Number, required: true },
     location: { type: String, required: true },
-    urgencyLevel: { type: String, enum: ["low", "medium", "high"], required: true },
-    status: { type: String, enum: ["pending", "matched", "completed"], default: "pending" },
+    hospital: { type: String },
+    notes: { type: String },
+    status: { 
+        type: String, 
+        enum: ['pending', 'fulfilled', 'cancelled'], 
+        default: 'pending' 
+    },
     createdAt: { type: Date, default: Date.now },
+    fulfilledBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Donor' }
 });
 
-
-const Request = mongoose.model("Request", requestSchema);
-export default Request;
+export default mongoose.model('Request', requestSchema);
