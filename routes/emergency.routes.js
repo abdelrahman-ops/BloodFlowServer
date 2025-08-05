@@ -1,6 +1,5 @@
 import express from 'express';
-import { createEmergencyRequest, getEmergencyRequests, trackEmergencyRequest, updateEmergencyRequestStatus } from '../controllers/emergency.controller.js';
-import { authorize, protect } from '../middleware/auth.js';
+import { createEmergencyRequest, getEmergencyRequests, trackEmergencyRequest, updateEmergencyRequestStatus } from '../controllers/emergency.controller.js'
 // import rateLimit from 'express-rate-limit';
 
 const router = express.Router();
@@ -13,8 +12,8 @@ const router = express.Router();
 
 
 router.post('/', createEmergencyRequest);
-router.get('/', protect, authorize('admin'), getEmergencyRequests);
-router.put('/:id/status', protect, authorize('admin'), updateEmergencyRequestStatus);
-router.get('/:id/updates', protect, trackEmergencyRequest);
+router.get('/',   getEmergencyRequests);
+router.put('/:id/status',   updateEmergencyRequestStatus);
+router.get('/:id/updates',  trackEmergencyRequest);
 
 export default router;

@@ -1,18 +1,18 @@
 import express from 'express';
 import { addDonation, getDonorProfile, getDonors, getNearbyRequests, updateAvailability, updateHealthInfo } from '../controllers/donor.controller.js';
-import { protect } from '../middleware/auth.js';
+
 import { handleDonorResponse } from '../services/notification.service.js';
 
 
 const router = express.Router();
 
 router.get('/', getDonors);
-router.get('/profile', protect, getDonorProfile);
-router.put('/availability', protect, updateAvailability);
-router.get('/nearby-requests', protect, getNearbyRequests);
-router.post('/donate', protect , addDonation);
-router.put('/health-info', protect , updateHealthInfo);
-router.post('/respond-to-emergency', protect, async (req, res) => {
+router.get('/profile',  getDonorProfile);
+router.put('/availability',  updateAvailability);
+router.get('/nearby-requests',  getNearbyRequests);
+router.post('/donate',  addDonation);
+router.put('/health-info',  updateHealthInfo);
+router.post('/respond-to-emergency',  async (req, res) => {
     try {
         const { emergencyId, canHelp } = req.body;
         const donorId = req.user.id;

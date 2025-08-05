@@ -1,27 +1,27 @@
 import express from 'express';
 import { createAdmin, createEvent, deleteEvent, deleteUser, getAllAdmins, getAllEvents, getAllUsers, getSystemOverview, getUserById, updateEvent, updateUser } from '../controllers/admin.controller.js';
-import { authorize, protect } from '../middleware/auth.js';
+
 
 const router = express.Router();
 
 
 
-router.get('/overview', protect, authorize('admin'), getSystemOverview);
+router.get('/overview', getSystemOverview);
 
-router.get('/users', protect, authorize('admin'), getAllUsers);
-router.get('/users/:id', protect, authorize('admin'), getUserById);
-router.get('/users', protect, authorize('admin'), getAllUsers);
+router.get('/users',  getAllUsers);
+router.get('/users/:id', getUserById);
+router.get('/users', getAllUsers);
 
-router.put('/users/:id', protect, authorize('admin'), updateUser);
-router.delete('/users/:id', protect, authorize('admin'), deleteUser);
+router.put('/users/:id', updateUser);
+router.delete('/users/:id', deleteUser);
 
-router.get('/events', protect, authorize('admin'), getAllEvents);
-router.post('/events', protect, authorize('admin'), createEvent);
-router.put('/events', protect, authorize('admin'), updateEvent);
-router.delete('/events', protect, authorize('admin'), deleteEvent);
+router.get('/events', getAllEvents);
+router.post('/events', createEvent);
+router.put('/events', updateEvent);
+router.delete('/events', deleteEvent);
 
-router.get('/admins', protect, authorize('admin'), getAllAdmins);
-router.post('/admins', protect, authorize('admin'), createAdmin);
+router.get('/admins', getAllAdmins);
+router.post('/admins', createAdmin);
 
 
 export default router;
