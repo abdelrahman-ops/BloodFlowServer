@@ -1,6 +1,7 @@
 import admin from 'firebase-admin';
 import Donor from '../models/Donor.js';
 import EmergencyRequest from '../models/EmergencyRequest.js';
+import User from '../models/User.js';
 
 // Initialize Firebase Admin SDK
 if (!admin.apps.length) {
