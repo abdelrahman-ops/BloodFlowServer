@@ -35,6 +35,7 @@ const donationSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    confirmedByRequester: { type: Boolean, default: false }
   },
   { timestamps: true }
 );

@@ -8,6 +8,7 @@ const notificationSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'EmergencyRequest'
     },
+    relatedRequest: { type: mongoose.Schema.Types.ObjectId, ref: 'BloodRequest' },
     read: { type: Boolean, default: false },
     type: {
         type: String,

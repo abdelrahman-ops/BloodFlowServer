@@ -1,9 +1,13 @@
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import Donor from '../models/Donor.js';
 import Admin from '../models/Admin.js';
 import Request from '../models/Request.js';
 import EmergencyRequest from '../models/EmergencyRequest.js';
 import Event from '../models/Event.js';
+import Hospital from '../models/Hospital.js';
+import mongoose from "mongoose";
 
 // Get system overview stats
 export const getSystemOverview = async (req, res) => {
@@ -218,4 +222,85 @@ export const createAdmin = async (req, res) => {
         console.error(err.message);
         res.status(500).send('Server error');
     }
+};
+
+
+export const registerHospitalAdmin = async (req, res) => {
+  try {
+    const {
+      name, email, password, phone,
+      hospitalName, hospitalPhone,
+      street, city, state, postalCode,
+      lat, lng , fcmToken , gender
+    } = req.body;
+
+    // 1. Create the user
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      phone,
+      bloodType: "O+", // placeholder
+      city,
+      district: state, // mapping state → district for now
+      gender,
+      role: "admin",
+      fcmToken
+    });
+
+    // 2. Create the hospital FIRST (no admin yet)
+    const hospital = await Hospital.create({
+      name: hospitalName,
+      phone: hospitalPhone,
+      address: { street, city, state, postalCode },
+      location: { type: "Point", coordinates: [lng, lat] },
+    });
+
+    // 3. Create the admin referencing hospital
+    const admin = await Admin.create({
+      userId: user._id,
+      hospital: hospital._id,
+      email: user.email
+    });
+
+    // 4. Update hospital to reference admin
+    hospital.admin = admin._id;
+    await hospital.save();
+
+     const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+
+    res.status(201).json({
+        token,
+        user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            phone: user.phone,
+            hospital: {
+                id: hospital._id,
+                name: hospital.name,
+                address: hospital.address,
+                phone: hospital.phone
+            }
+        },
+        message: "Hospital admin and hospital created successfully",
+        userId: user._id,
+        adminId: admin._id,
+        hospitalId: hospital._id
+    });
+
+  } catch (err) {
+    console.error("Error in registerHospitalAdmin:", err);
+    res.status(500).json({
+      message: "Server error",
+      error: process.env.NODE_ENV === "development" ? err.message : undefined
+    });
+  }
 };

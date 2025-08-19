@@ -1,6 +1,7 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
@@ -11,7 +12,7 @@ import { dirname, join } from "path";
 import routes from "./routes/index.js";
 
 // Load environment variables
-dotenv.config();
+// dotenv.config();
 
 // Get the directory name for ES module support
 const __filename = fileURLToPath(import.meta.url);
@@ -62,7 +63,6 @@ app.use((err, req, res, next) => {
 
 // Define the port and start the server
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

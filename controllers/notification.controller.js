@@ -11,8 +11,8 @@ export const getUserNotifications = async (req, res) => {
             .sort({ createdAt: -1 })
             .populate('emergencyRequest', 'bloodType location hospital');
         
-        console.log("useId: ", userId)
-        console.log("notifications: ", notifications);
+        // console.log("useId: ", req)
+        // console.log("notifications: ", notifications);
 
         res.json({
             success: true,
