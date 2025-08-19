@@ -30,7 +30,8 @@ app.use(
       origin: [
           "http://localhost:5173",
           "https://blood-flow.vercel.app",
-          "https://blood-flow-server-v2.vercel.app"
+          "https://blood-flow-server-v2.vercel.app",
+          "https://bfserver.vercel.app"
       ],
       methods: ["GET", "POST", "PUT", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization"],
